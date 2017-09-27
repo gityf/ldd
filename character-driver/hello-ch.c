@@ -2,13 +2,16 @@
 #include <linux/moduleparam.h>
 #include <linux/init.h>
 #include <linux/slab.h>         /* kmalloc()kfree() *
-
+#include <asm/io.h>
+#include <asm/system.h>
 #include <linux/kernel.h>	/* printk() */
 #include <linux/fs.h>	   
 #include <linux/errno.h>	/* error codes */
 #include <linux/types.h>	/* size_t */
 #include <linux/cdev.h>
 #include <asm/uaccess.h>	/* copy_to_user() */
+
+#include "ioc-cmd.h"            /* ioc command */
 
 /* function prototypes */
 static int hello_open( struct inode *inode, struct file *filp );
@@ -17,6 +20,7 @@ ssize_t hello_read( struct file *flip, char __user *buf, size_t count,loff_t
 					*f_pos);
 ssize_t hello_write( struct file *filp, const char __user *buf, size_t count,
 					 loff_t *f_pos );
+ssize_t hello_ioctl( struct file *filp, unsigned int cmd, unsigned long arg);
 static int hello_major = 0;		/* major device number */
 MODULE_AUTHOR( "voipman" );
 MODULE_LICENSE( "Dual BSD/GPL" );
@@ -30,6 +34,7 @@ static struct file_operations hello_ops = {
 	.open = hello_open,
 	.read = hello_read,
 	.write = hello_write,
+        .unlocked_ioctl = hello_ioctl,
 	.release = hello_release,
 };
 /* Open the device */
@@ -126,6 +131,52 @@ ssize_t hello_write( struct file *filp, const char __user *buf, size_t count,
   out:
 	kfree(bank );
 	return retval;
+}
+
+/* ioctl to kernel device */
+ssize_t hello_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+{
+
+    int err = 0;
+    int ret = 0;
+    int ioarg = 0;
+    
+    /* to check magic is CH_DEV_IOC_MAGIC or not*/
+    if (_IOC_TYPE(cmd) != CH_DEV_IOC_MAGIC) 
+        return -EINVAL;
+    /* when the cmd is large then CH_DEV_IOC_MAXNR, err */
+    if (_IOC_NR(cmd) > CH_DEV_IOC_MAXNR) 
+        return -EINVAL;
+
+    /* to check user space of arg access ok or not */
+    if (_IOC_DIR(cmd) & _IOC_READ)
+        err = !access_ok(VERIFY_WRITE, (void *)arg, _IOC_SIZE(cmd));
+    else if (_IOC_DIR(cmd) & _IOC_WRITE)
+        err = !access_ok(VERIFY_READ, (void *)arg, _IOC_SIZE(cmd));
+    if (err) {
+        printk(KERN_ERR"hello-device: arg address access err");
+        return -EFAULT;
+    }
+
+    switch(cmd) {
+      case CH_DEV_IOC_PRINT:
+          printk(KERN_NOTICE"hello-device: CMD CH_DEV_IOC_PRINT Done\n");
+        break;
+      
+      case CH_DEV_IOC_GETDATA: 
+        ioarg = 20170910;
+        ret = __put_user(ioarg, (int *)arg);
+        break;
+      
+      case CH_DEV_IOC_SETDATA: 
+        ret = __get_user(ioarg, (int *)arg);
+        printk(KERN_NOTICE"hello-device: In Kernel CH_DEV_IOC_SETDATA ioarg = %d \n", ioarg);
+        break;
+
+      default:  
+        return -EINVAL;
+    }
+    return ret;
 }
 
 /* register the init and exit routine of the module */
