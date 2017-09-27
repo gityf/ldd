@@ -8,7 +8,15 @@ This project is demo of linux device driver. It provides driver of charactor dri
 Charactor Driver
 ------------
 
-TBD
+	implement of charactor driver.
+	|----|----|
+        |System V API | hello-driver function|
+        | open| hello_open|
+        | read| hello_read|
+        | write|hello_write|
+        | ioctl | hello_ioctl|
+        | close|ioctl_close|
+        |----|----|
 
 Block Driver
 -------------
