@@ -50,14 +50,15 @@ close device /dev/hello0
 ## kernel message
 ```bash
 cat /proc/kmsg
-<5>[44922.747177] hello init: 249, 0
-<5>[44925.148806] Hello device open!
-<5>[44925.148879] hello: user read 20 bytes from me. KKKKKKKKKKKKKKKKKKKK
-<5>[44925.148889] hello: user has written 6 bytes to me: Hello
-<5>[44925.148899] hello-device: CMD CH_DEV_IOC_PRINT Done
-<5>[44925.148902] hello-device: In Kernel CH_DEV_IOC_SETDATA ioarg = 20170909
-<5>[44925.148907] hello-device: In Kernel CH_DEV_IOC_GETBUFDATA arg = BBBBBBBBBBBBBBBBBBBB
-<5>[44925.148912] hello-device: In Kernel CH_DEV_IOC_SETBUFDATA arg = UUUUUUUUUUUUUUUUUUUU
-<5>[44925.148916] Hello device close!
-<5>[45042.043820] hello exit. major:249,minor 0
+
+<5>[45543.623376] hello init: 249, 0
+<5>[45548.559441] Hello device open!
+<5>[45548.559449] hello: user read 20 bytes from me. KKKKKKKKKKKKKKKKKKKK
+<5>[45548.559458] hello: user has written 6 bytes to me: Hello
+<5>[45548.559466] hello-device: CMD CH_DEV_IOC_PRINT Done
+<5>[45548.559469] hello-device: In Kernel CH_DEV_IOC_SETDATA ioarg = 20170909
+<5>[45548.559474] hello-device: In Kernel CH_DEV_IOC_GETBUFDATA arg = BBBBBBBBBBBBBBBBBBBB
+<5>[45548.559478] hello-device: In Kernel CH_DEV_IOC_SETBUFDATA arg = UUUUUUUUUUUUUUUUUUUU
+<5>[45548.559481] Hello device close!
+<5>[45562.744405] hello exit. major:249,minor 0
 ```

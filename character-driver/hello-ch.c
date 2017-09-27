@@ -100,7 +100,8 @@ ssize_t hello_read( struct file *flip, char __user *buf, size_t count,loff_t
 	if( bank == NULL )
 		return -1;
 	memset( bank, 'K',count );
-	if( copy_to_user( buf, bank, count ) ){
+        bank[count] = 0x00;
+	if( copy_to_user( buf, bank, count+1 ) ){
 		retval = -EFAULT;
 		goto out;
 	}
