@@ -16,7 +16,8 @@ Charactor Driver
 | read| hello_read|
 | write|hello_write|
 | ioctl | hello_ioctl|
-| close|ioctl_close|
+| close|hello_close|
+| poll|hello_poll|
 
 Block Driver
 -------------
