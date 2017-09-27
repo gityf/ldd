@@ -5,6 +5,7 @@
 #include <asm/io.h>
 #include <linux/kernel.h>	/* printk() */
 #include <linux/fs.h>	   
+#include <linux/poll.h>	        /* poll() */ 
 #include <linux/errno.h>	/* error codes */
 #include <linux/types.h>	/* size_t */
 #include <linux/cdev.h>
@@ -13,13 +14,15 @@
 #include "ioc-cmd.h"            /* ioc command */
 
 /* function prototypes */
-static int hello_open( struct inode *inode, struct file *filp );
-static int hello_release( struct inode *inode, struct file *filp );
-ssize_t hello_read( struct file *flip, char __user *buf, size_t count,loff_t
+static int hello_open(struct inode *inode, struct file *filp);
+static int hello_release(struct inode *inode, struct file *filp);
+ssize_t hello_read(struct file *flip, char __user *buf, size_t count,loff_t
 					*f_pos);
-ssize_t hello_write( struct file *filp, const char __user *buf, size_t count,
-					 loff_t *f_pos );
-ssize_t hello_ioctl( struct file *filp, unsigned int cmd, unsigned long arg);
+ssize_t hello_write(struct file *filp, const char __user *buf, size_t count,
+					 loff_t *f_pos);
+ssize_t hello_ioctl(struct file *filp, unsigned int cmd, unsigned long arg);
+unsigned int hello_poll(struct file *filp, struct poll_table_struct *ptable);
+
 static int hello_major = 0;		/* major device number */
 MODULE_AUTHOR( "voipman" );
 MODULE_LICENSE( "Dual BSD/GPL" );
@@ -34,6 +37,7 @@ static struct file_operations hello_ops = {
 	.read = hello_read,
 	.write = hello_write,
         .unlocked_ioctl = hello_ioctl,
+        .poll = hello_poll,
 	.release = hello_release,
 };
 /* Open the device */
@@ -208,6 +212,12 @@ ssize_t hello_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
     return ret;
 }
 
+unsigned int hello_poll(struct file *filp, struct poll_table_struct *ptable) {
+    unsigned int mask = 0;
+    printk(KERN_NOTICE"hello-device: In Kernel hello_poll call, return POLLIN");
+    mask |= POLLIN; 
+    return mask;
+}
 /* register the init and exit routine of the module */
 module_init( hello_init );
 module_exit( hello_exit );

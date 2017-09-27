@@ -3,10 +3,35 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/poll.h>
 
 #include "ioc-cmd.h"
 
 #define READ_SIZE 20
+
+int poll_call(int fd) {
+    struct pollfd* ipfds;
+    int retval = 0, j;
+    
+    ipfds = (struct pollfd *)malloc(10 * sizeof(struct pollfd));
+    if (ipfds == NULL) return -1;
+    memset(ipfds, 0, sizeof(struct pollfd));
+    ipfds[0].fd      = fd;
+    ipfds[0].events  = 0;
+    ipfds[0].revents = 0;
+ 
+    retval = poll(ipfds, 1, 2000);
+
+    if (retval > 0) {
+        for (j = 0; j <= 1; j++) {
+            if (ipfds[j].revents & POLLIN)  printf("poll_call: POLLIN\n");
+            if (ipfds[j].revents & POLLOUT) printf("poll_call: POLLOUT\n");
+            if (ipfds[j].revents & POLLERR) printf("poll_call: POLLERR\n");
+            if (ipfds[j].revents & POLLHUP) printf("poll_call: POLLHUP\n");
+        }
+    }
+    return 0;
+}
 
 int ioctl_call(int fd) {
     int cmd;
@@ -95,7 +120,11 @@ int main(int argc, char **argv){
         
         /* ioctl call demo */
         ioctl_call(fd);
-	close(fd);
+        
+        /* poll call demo */
+        poll_call(fd);
+	
+        close(fd);
 	printf("close device %s\n",argv[1] );
 	return 0;
 }
