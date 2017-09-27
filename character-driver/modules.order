@@ -1,1 +1,1 @@
-kernel//root/kernel/ch_driver/hello-ch.ko
+kernel//root/kernel/ldd/character-driver/hello-ch.ko
