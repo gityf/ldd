@@ -3,7 +3,6 @@
 #include <linux/init.h>
 #include <linux/slab.h>         /* kmalloc()kfree() */
 #include <asm/io.h>
-#include <asm/system.h>
 #include <linux/kernel.h>	/* printk() */
 #include <linux/fs.h>	   
 #include <linux/errno.h>	/* error codes */
@@ -140,6 +139,8 @@ ssize_t hello_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
     int err = 0;
     int ret = 0;
     int ioarg = 0;
+    char *bank;
+    int count = 20;
     
     /* to check magic is CH_DEV_IOC_MAGIC or not*/
     if (_IOC_TYPE(cmd) != CH_DEV_IOC_MAGIC) 
@@ -171,6 +172,33 @@ ssize_t hello_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
       case CH_DEV_IOC_SETDATA: 
         ret = __get_user(ioarg, (int *)arg);
         printk(KERN_NOTICE"hello-device: In Kernel CH_DEV_IOC_SETDATA ioarg = %d \n", ioarg);
+        break;
+
+      case CH_DEV_IOC_GETBUFDATA: 
+	bank = kmalloc(count ,GFP_KERNEL );
+	if (bank == NULL)
+		return -EFAULT;
+        memset(bank, 'B', count);
+        bank[count] = 0x00;
+        
+	if (copy_to_user((char *)arg, bank, count)){
+		printk( KERN_NOTICE"hello: CH_DEV_IOC_SETBUFDATA error\n" );
+		return -EFAULT;
+	}
+        printk(KERN_NOTICE"hello-device: In Kernel CH_DEV_IOC_GETBUFDATA arg = %s \n", bank);
+	kfree(bank);
+        break;
+      
+      case CH_DEV_IOC_SETBUFDATA: 
+	bank = kmalloc(count+1 ,GFP_KERNEL );
+	if (bank == NULL)
+		return -EFAULT;
+	if (copy_from_user(bank, (char *)arg, count)){
+		printk( KERN_NOTICE"hello: CH_DEV_IOC_SETBUFDATA error\n" );
+		return -EFAULT;
+	}
+        printk(KERN_NOTICE"hello-device: In Kernel CH_DEV_IOC_SETBUFDATA arg = %s \n", bank);
+	kfree(bank);
         break;
 
       default:  

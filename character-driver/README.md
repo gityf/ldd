@@ -33,12 +33,16 @@ vermagic:       3.10.0-123.el7.x86_64 SMP mod_unload modversions
 ```bash
 ./test-ch /dev/hello0 c 10 0
 /dev/hello0 has been opened: (fd:3).
-read 10 bytes from /dev/hello0:KKKKKKKKKK@
+read 20 bytes from /dev/hello0:KKKKKKKKKKKKKKKKKKKK
 write 6 bytes to /dev/hello0:Hello
 Call CCH_DEV_IOC_PRINT
 Call CH_DEV_IOC_SETDATA
 Call CH_DEV_IOC_GETDATA
 In User Space CH_DEV_IOC_GETDATA Get Data is 20170910
+Call CH_DEV_IOC_GETBUFDATA
+In User Space CH_DEV_IOC_GETBUFDATA Get Data is BBBBBBBBBBBBBBBBBBBB
+Call CH_DEV_IOC_SETBUFDATA
+In User Space CH_DEV_IOC_SETBUFDATA Set Data is UUUUUUUUUUUUUUUUUUUU
 close device /dev/hello0
 ```
 ## remove module from kernel.
@@ -46,12 +50,14 @@ close device /dev/hello0
 ## kernel message
 ```bash
 cat /proc/kmsg
-<5>[41441.785324] hello init: 249, 0
-<5>[41448.408312] Hello device open!
-<5>[41448.408346] hello: user read 10 bytes from me. KKKKKKKKKK
-<5>[41448.408355] hello: user has written 6 bytes to me: Hello
-<5>[41448.408363] hello-device: CMD CH_DEV_IOC_PRINT Done
-<5>[41448.408366] hello-device: In Kernel CH_DEV_IOC_SETDATA ioarg = 20170909
-<5>[41448.408372] Hello device close!
-<5>[41507.107292] hello exit. major:249,minor 0
+<5>[44922.747177] hello init: 249, 0
+<5>[44925.148806] Hello device open!
+<5>[44925.148879] hello: user read 20 bytes from me. KKKKKKKKKKKKKKKKKKKK
+<5>[44925.148889] hello: user has written 6 bytes to me: Hello
+<5>[44925.148899] hello-device: CMD CH_DEV_IOC_PRINT Done
+<5>[44925.148902] hello-device: In Kernel CH_DEV_IOC_SETDATA ioarg = 20170909
+<5>[44925.148907] hello-device: In Kernel CH_DEV_IOC_GETBUFDATA arg = BBBBBBBBBBBBBBBBBBBB
+<5>[44925.148912] hello-device: In Kernel CH_DEV_IOC_SETBUFDATA arg = UUUUUUUUUUUUUUUUUUUU
+<5>[44925.148916] Hello device close!
+<5>[45042.043820] hello exit. major:249,minor 0
 ```

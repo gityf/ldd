@@ -6,11 +6,12 @@
 
 #include "ioc-cmd.h"
 
-#define READ_SIZE 10
+#define READ_SIZE 20
 
 int ioctl_call(int fd) {
     int cmd;
     int arg;
+    char buf[READ_SIZE+1];
 
     /* call cmd to print arg at kernel device. */
     printf("Call CCH_DEV_IOC_PRINT\n");
@@ -42,6 +43,28 @@ int ioctl_call(int fd) {
             return -1;
     }
     printf("In User Space CH_DEV_IOC_GETDATA Get Data is %d\n",arg);
+    
+    /* call cmd to get buf data from kernel device. */
+    printf("Call CH_DEV_IOC_GETBUFDATA\n");
+    cmd = CH_DEV_IOC_GETBUFDATA;
+    if (ioctl(fd, cmd, (unsigned long long *)buf) < 0)
+    {
+            printf("Call cmd CH_DEV_IOC_GETBUFDATA fail\n");
+            return -1;
+    }
+    printf("In User Space CH_DEV_IOC_GETBUFDATA Get Data is %s\n", buf);
+    
+    /* call cmd to set buf data from kernel device. */
+    printf("Call CH_DEV_IOC_SETBUFDATA\n");
+    memset(buf, 'U', READ_SIZE);
+    buf[READ_SIZE] = 0x00;
+    cmd = CH_DEV_IOC_SETBUFDATA;
+    if (ioctl(fd, cmd, (unsigned long long *)buf) < 0)
+    {
+            printf("Call cmd CH_DEV_IOC_SETBUFDATA fail\n");
+            return -1;
+    }
+    printf("In User Space CH_DEV_IOC_SETBUFDATA Set Data is %s\n", buf);
     return 0;
 }
 
