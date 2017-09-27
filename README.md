@@ -9,14 +9,15 @@ Charactor Driver
 ------------
 
 	implement of charactor driver.
-	|----|----|
-        |System V API | hello-driver function|
-        | open| hello_open|
-        | read| hello_read|
-        | write|hello_write|
-        | ioctl | hello_ioctl|
-        | close|ioctl_close|
-        |----|----|
+
+|----|----|
+|System V API | hello-driver function|
+| open| hello_open|
+| read| hello_read|
+| write|hello_write|
+| ioctl | hello_ioctl|
+| close|ioctl_close|
+|----|----|
 
 Block Driver
 -------------
