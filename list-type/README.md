@@ -7,7 +7,7 @@ make
 ## insert module to kernel module list
 	insmod hello-list.ko
 ## remove module from kernel.
-	rmmod hello.ko
+	rmmod hello-list.ko
 ## kernel message
 ```bash
 cat /proc/kmsg

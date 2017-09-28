@@ -5,6 +5,10 @@ This project is demo of linux device driver. It provides driver of charactor dri
 
 **NOTE**: This is a Work-In-Progress. A lot of will change in the coming weeks, and I recommend against using this in production code as API might change. Patches are welcome!
 
+list-type
+------------
+	test code of list_head, list_add, list_add_tail, list_del, list_move, list_move_tail and list_for_each.
+	
 Charactor Driver
 ------------
 
