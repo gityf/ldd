@@ -9,6 +9,7 @@ list-type
 ------------
 	test code of list_head, list_add, list_add_tail, list_del
         list_move, list_move_tail and list_for_each.
+	hlist_head, hlist_node etc.
 	
 kfifo-type
 ------------
