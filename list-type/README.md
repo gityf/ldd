@@ -12,43 +12,88 @@ make
 ```bash
 cat /proc/kmsg
 
-<3>[95073.972252] Module, hello list init.
-<4>[95073.972643] list_add node_1,2,3,4
-<4>[95073.972645] name: node3
-<4>[95073.972646] id: 3
-<4>[95073.972647] name: node2
-<4>[95073.972648] id: 2
-<4>[95073.972648] name: node1
-<4>[95073.972649] id: 1
-<4>[95073.972650] name: node4
-<4>[95073.972651] id: 4
-<4>[95073.972652] after list_move node_3
-<4>[95073.972652] name: node2
-<4>[95073.972653] id: 2
-<4>[95073.972654] name: node1
-<4>[95073.972655] id: 1
-<4>[95073.972656] name: node4
-<4>[95073.972656] id: 4
-<4>[95073.972657] head2 list node
-<4>[95073.972658] name: node3
-<4>[95073.972659] id: 3
-<4>[95073.972660] after list_movei_tail node_4
-<4>[95073.972661] name: node2
-<4>[95073.972661] id: 2
-<4>[95073.972662] name: node1
-<4>[95073.972663] id: 1
-<4>[95073.972664] head2 list node
-<4>[95073.972665] name: node3
-<4>[95073.972666] id: 3
-<4>[95073.972667] name: node4
-<4>[95073.972668] id: 4
-<4>[95073.972668] after list_del node_1
-<4>[95073.972669] name: node2
-<4>[95073.972670] id: 2
-<4>[95073.972671] after list_del node_2
-<4>[95073.972672] head2  after list_del node_4
-<4>[95073.972673] name: node3
-<4>[95073.972674] id: 3
-<4>[95073.972674] after list_del node_3
-<3>[95076.102687] Module, hello list exit.
+<4>[16377.872965] Module, hello list init.
+<4>[16377.872968] Module, hello list.
+<4>[16377.872969] list_add node_1,2,3,4
+<4>[16377.872969] list-name: node3
+<4>[16377.872970] list-id: 3
+<4>[16377.872971] list-name: node2
+<4>[16377.872972] list-id: 2
+<4>[16377.872973] list-name: node1
+<4>[16377.872973] list-id: 1
+<4>[16377.872974] list-name: node4
+<4>[16377.872975] list-id: 4
+<4>[16377.872975] after list_move node_3
+<4>[16377.872976] list-name: node2
+<4>[16377.872977] list-id: 2
+<4>[16377.872977] list-name: node1
+<4>[16377.872978] list-id: 1
+<4>[16377.872979] list-name: node4
+<4>[16377.872979] list-id: 4
+<4>[16377.872980] head2 list node
+<4>[16377.872981] list-name: node3
+<4>[16377.872981] list-id: 3
+<4>[16377.872982] after list_move_tail node_4
+<4>[16377.872983] list-name: node2
+<4>[16377.872983] list-id: 2
+<4>[16377.872984] list-name: node1
+<4>[16377.872985] list-id: 1
+<4>[16377.872985] head2 list node
+<4>[16377.872986] list-name: node3
+<4>[16377.872987] list-id: 3
+<4>[16377.872987] list-name: node4
+<4>[16377.872988] list-id: 4
+<4>[16377.872989] after list_del node_1
+<4>[16377.872989] list-name: node2
+<4>[16377.872990] list-id: 2
+<4>[16377.872991] after list_del node_2
+<4>[16377.872991] head2  after list_del node_4
+<4>[16377.872992] list-name: node3
+<4>[16377.872993] list-id: 3
+<4>[16377.872993] after list_del node_3
+<4>[16377.872994] Module, hello hlist.
+<4>[16377.872995] list_add node_1,2,3,4
+<4>[16377.872995] hlist-name: node4
+<4>[16377.872996] hlist-id: 4
+<4>[16377.872997] hlist-name: node3
+<4>[16377.872997] hlist-id: 3
+<4>[16377.872998] hlist-name: node2
+<4>[16377.872999] hlist-id: 2
+<4>[16377.872999] hlist-name: node1
+<4>[16377.873000] hlist-id: 1
+<4>[16377.873001] after list_move node_3
+<4>[16377.873001] hlist-name: node4
+<4>[16377.873002] hlist-id: 4
+<4>[16377.873003] hlist-name: node3
+<4>[16377.873003] hlist-id: 3
+<4>[16377.873004] hlist-name: node2
+<4>[16377.873005] hlist-id: 2
+<4>[16377.873005] hlist-name: node1
+<4>[16377.873006] hlist-id: 1
+<4>[16377.873007] head2 list node
+<4>[16377.873007] hlist-name: node4
+<4>[16377.873008] hlist-id: 4
+<4>[16377.873009] hlist-name: node3
+<4>[16377.873009] hlist-id: 3
+<4>[16377.873010] hlist-name: node2
+<4>[16377.873011] hlist-id: 2
+<4>[16377.873011] hlist-name: node1
+<4>[16377.873012] hlist-id: 1
+<4>[16377.873013] after list_del node_1
+<4>[16377.873013] hlist-name: node4
+<4>[16377.873014] hlist-id: 4
+<4>[16377.873015] hlist-name: node3
+<4>[16377.873015] hlist-id: 3
+<4>[16377.873016] hlist-name: node2
+<4>[16377.873017] hlist-id: 2
+<4>[16377.873017] after list_del node_2
+<4>[16377.873018] hlist-name: node4
+<4>[16377.873019] hlist-id: 4
+<4>[16377.873019] hlist-name: node3
+<4>[16377.873020] hlist-id: 3
+<4>[16377.873021] head2  after list_del node_4
+<4>[16377.873021] hlist-name: node3
+<4>[16377.873022] hlist-id: 3
+<4>[16377.873022] after list_del node_3
+<4>[16377.873022] Module, hello list exit.
 ```

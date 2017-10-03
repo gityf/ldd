@@ -14,6 +14,13 @@ typedef struct node_s
     int id;
 } node_t;
 
+typedef struct hnode_s
+{
+    struct hlist_node node;
+    char name[MAX_NAME_LEN];
+    int id;
+} hnode_t;
+
 static void node_print(struct list_head *head) {
     node_t *entry;
     struct list_head *p;
@@ -21,8 +28,20 @@ static void node_print(struct list_head *head) {
     list_for_each(p, head)
     {
         entry=list_entry(p,struct node_s,list);
-        printk("name: %s\n",entry->name);
-        printk("id: %d\n",entry->id);
+        printk("list-name: %s\n",entry->name);
+        printk("list-id: %d\n",entry->id);
+    }
+}
+
+static void hnode_print(struct hlist_head *head) {
+    hnode_t *entry;
+    struct hlist_node *p;
+    
+    hlist_for_each(p, head)
+    {
+        entry=hlist_entry(p,struct hnode_s, node);
+        printk("hlist-name: %s\n",entry->name);
+        printk("hlist-id: %d\n",entry->id);
     }
 }
 
@@ -63,7 +82,7 @@ static int list_demo() {
     node_print(&head2);
 
     list_move_tail(&node_4.list, &head2);
-    printk("after list_movei_tail node_4\n");
+    printk("after list_move_tail node_4\n");
     node_print(&head);
     printk("head2 list node\n");
     node_print(&head2);
@@ -87,16 +106,74 @@ static int list_demo() {
     return 0;
 }
 
+static int hlist_demo() {
+    struct hlist_head head;
+    struct hlist_head head2;
+    hnode_t node_1;
+    hnode_t node_2;
+    hnode_t node_3;
+    hnode_t node_4;
+
+    INIT_HLIST_HEAD(&head);
+    INIT_HLIST_HEAD(&head2);
+
+    strcpy(node_1.name, "node1");
+    node_1.id = 1;
+
+    strcpy(node_2.name, "node2");
+    node_2.id = 2;
+
+    strcpy(node_3.name, "node3");
+    node_3.id = 3;
+
+    strcpy(node_4.name, "node4");
+    node_4.id = 4;
+
+    hlist_add_head(&node_1.node, &head);
+    hlist_add_head(&node_2.node, &head);
+    hlist_add_head(&node_3.node, &head);
+    hlist_add_head(&node_4.node, &head);
+
+    printk("list_add node_1,2,3,4\n");
+    hnode_print(&head);
+
+    hlist_move_list(&head, &head2);
+    printk("after list_move node_3\n");
+    hnode_print(&head2);
+    printk("head2 list node\n");
+    hnode_print(&head2);
+
+    hlist_del(&node_1.node);
+    printk("after list_del node_1\n");
+    hnode_print(&head2);
+    
+    hlist_del(&node_2.node);
+    printk("after list_del node_2\n");
+    hnode_print(&head2);
+    
+    hlist_del(&node_4.node);
+    printk("head2  after list_del node_4\n");
+    hnode_print(&head2);
+    
+    hlist_del(&node_3.node);
+    printk("after list_del node_3\n");
+    hnode_print(&head2);
+    
+    return 0;
+}
 static int hello_init(void)
 {
-    printk(KERN_ERR"Module, hello list init.\n");
+    printk("Module, hello list init.\n");
+    printk("Module, hello list.\n");
     list_demo();
+    printk("Module, hello hlist.\n");
+    hlist_demo();
     return 0;
 }
 
 static void hello_exit(void)
 {
-	printk(KERN_ERR"Module, hello list exit.\n");
+	printk("Module, hello list exit.\n");
 	return;
 }
 module_init(hello_init);
