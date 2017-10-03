@@ -133,7 +133,9 @@ static int hlist_demo() {
     hlist_add_before(&node_2.node, &node_1.node);
     hlist_add_head(&node_4.node, &head);
     hlist_add_after(&node_4.node, &node_3.node);
-
+    /*
+    hlist_add_behind(&node_4.node, &node_3.node);
+    */
     printk("list_add node_1,2,3,4\n");
     hnode_print(&head);
 
