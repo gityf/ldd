@@ -9,6 +9,10 @@ list-type
 ------------
 	test code of list_head, list_add, list_add_tail, list_del, list_move, list_move_tail and list_for_each.
 	
+kfifo-type
+------------
+	test code of kfifo_alloc, kfifo_in, kfifo_out, kfifo_size, kfifo_len, kfifo_avail, kfifo_is_empty, kfifo_is_full, kfifo_reset, kfifo_free.
+	
 Charactor Driver
 ------------
 
