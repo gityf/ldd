@@ -1,5 +1,5 @@
 CURR_PATH   = $(shell pwd)
-KERNEL_PATH = /usr/src/kernels/3.10.0-514.26.2.el7.x86_64
+KERNEL_PATH = /usr/src/kernels/3.10.0-123.el7.x86_64
 BUILD_PATH  = $(CURR_PATH)/build 
 obj-m := hello.o
 default:
