@@ -1,4 +1,6 @@
 #include <linux/list.h> 
+#include <linux/llist.h> 
+#include <linux/plist.h> 
 #include <linux/init.h>
 #include <linux/module.h>
 
@@ -21,6 +23,13 @@ typedef struct hnode_s
     int id;
 } hnode_t;
 
+typedef struct pnode_s
+{
+    struct plist_node node;
+    char name[MAX_NAME_LEN];
+    int id;
+} pnode_t;
+
 static void node_print(struct list_head *head) {
     node_t *entry;
     struct list_head *p;
@@ -42,6 +51,28 @@ static void hnode_print(struct hlist_head *head) {
         entry=hlist_entry(p,struct hnode_s, node);
         printk("hlist-name: %s\n",entry->name);
         printk("hlist-id: %d\n",entry->id);
+    }
+}
+
+static void pnode_print(struct plist_head *head) {
+    pnode_t *entry;
+    struct plist_node *p;
+    
+    plist_for_each(p, head)
+    {
+        entry=llist_entry(p,struct pnode_s, node);
+        printk("plist-name: %s\n",entry->name);
+        printk("plist-id: %d\n",entry->id);
+    }
+}
+
+static void pnode_t_print(struct plist_node *node) {
+    pnode_t *entry;
+    if (node)
+    {
+        entry=llist_entry(node,struct pnode_s, node);
+        printk("llist-name: %s\n",entry->name);
+        printk("llist-id: %d\n",entry->id);
     }
 }
 
@@ -163,13 +194,65 @@ static int hlist_demo() {
     
     return 0;
 }
+
+static int plist_demo() {
+    struct plist_head head;
+    struct plist_node *ret_node;
+
+    pnode_t node_1;
+    pnode_t node_2;
+    pnode_t node_3;
+    pnode_t node_4;
+
+    plist_head_init(&head);
+    plist_node_init(&node_1.node, 1);
+    plist_node_init(&node_2.node, 2);
+    plist_node_init(&node_3.node, 3);
+    plist_node_init(&node_4.node, 4);
+
+    strcpy(node_1.name, "node1");
+    node_1.id = 1;
+
+    strcpy(node_2.name, "node2");
+    node_2.id = 2;
+
+    strcpy(node_3.name, "node3");
+    node_3.id = 3;
+
+    strcpy(node_4.name, "node4");
+    node_4.id = 4;
+
+    plist_add(&node_1.node, &head);
+    plist_add(&node_2.node, &head);
+    plist_add(&node_4.node, &head);
+    plist_add(&node_4.node, &head);
+    printk("plist_add node_1,2,3,4\n");
+    pnode_print(&head);
+
+    plist_del(&node_1.node, &head);
+    printk("after llist_del node_1\n");
+    pnode_print(&head);
+
+    ret_node = plist_last(&head);
+    printk("plist_last print\n");
+    pnode_t_print(ret_node);
+    
+    ret_node = plist_first(&head);
+    printk("plist_first print\n");
+    pnode_t_print(ret_node);
+    
+    return 0;
+}
+
 static int hello_init(void)
 {
     printk("Module, hello list init.\n");
     printk("Module, hello list.\n");
     list_demo();
-    printk("Module, hello hlist.\n");
+    printk("\nModule, hello hlist.\n");
     hlist_demo();
+    printk("\nModule, hello plist.\n");
+    plist_demo();
     return 0;
 }
 
