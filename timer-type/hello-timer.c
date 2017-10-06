@@ -14,6 +14,8 @@ struct timer_list timer4;
 void timer_func(unsigned long data) {
 	struct timer_list *data_ptr = (struct timer_list *) data;
 	printk("timer_func data:%lu, expires:%lu\n", data, data_ptr->expires);
+        data_ptr->expires = jiffies + 10;
+	add_timer(data_ptr);
 }
 
 static void add_timer_func(struct timer_list *timer) {
@@ -50,6 +52,10 @@ static int hello_init(void)
 static void hello_exit(void)
 {
 	printk(KERN_ERR"Module, hello timer exit.\n");
+        del_timer(&timer1);
+        del_timer(&timer4);
+        del_timer(&timer2);
+	mdelay(200);
 	return;
 }
 module_init(hello_init);
