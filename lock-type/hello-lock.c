@@ -3,6 +3,7 @@
 #include <linux/spinlock.h>
 #include <linux/seqlock.h>
 #include <linux/mutex.h>
+#include <linux/rcupdate.h>
 
 MODULE_AUTHOR("voipman");
 MODULE_LICENSE("Dual BSD/GPL");
@@ -52,6 +53,12 @@ static void rwlock_lock_func(void) {
 	write_unlock(&my_rwlock);
 }
 
+static void rcu_lock_func(void) {
+	rcu_read_lock_sched();
+	printk("rcu_lock_func- init lock unlock\n");
+	rcu_read_unlock_sched();
+}
+
 static int hello_init(void)
 {
 	printk(KERN_ERR"Module, hello lock.\n");
@@ -59,6 +66,7 @@ static int hello_init(void)
 	seq_lock_func();
 	mutex_lock_func();
 	rwlock_lock_func();
+	rcu_lock_func();
 	return 0x0;
 }
 
