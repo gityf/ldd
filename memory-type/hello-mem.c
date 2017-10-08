@@ -69,6 +69,22 @@ static int get_free_page_demo(void)
 	return 0;
 }
 
+#define KMEM_CACHE_QUANTUM 40
+static int kmem_cache_func(void)
+{
+	char *buf;
+	struct kmem_cache *my_cache;
+
+	my_cache = kmem_cache_create("my_cache", KMEM_CACHE_QUANTUM, 0, SLAB_HWCACHE_ALIGN, NULL);
+	buf = kmem_cache_alloc(my_cache, GFP_KERNEL);	
+	memset(buf, 'F', KMEM_CACHE_QUANTUM);
+	buf[KMEM_CACHE_QUANTUM] = 0x00;
+	printk("kmem_cache_alloc buf ptr:%lu, data:%s\n", (unsigned long)buf, buf);
+	kmem_cache_free(my_cache, buf);	
+	kmem_cache_destroy(my_cache);	
+	
+	return 0;
+}
 
 static int hello_init(void)
 {
@@ -77,6 +93,7 @@ static int hello_init(void)
 	vmalloc_vfree();
 	ioremap_iounmap();
 	get_free_page_demo();
+	kmem_cache_func();
 	return 0x0;
 }
 
