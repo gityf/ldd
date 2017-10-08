@@ -4,6 +4,7 @@
 #include <linux/seqlock.h>
 #include <linux/mutex.h>
 #include <linux/rcupdate.h>
+#include <linux/semaphore.h>
 
 MODULE_AUTHOR("voipman");
 MODULE_LICENSE("Dual BSD/GPL");
@@ -59,6 +60,15 @@ static void rcu_lock_func(void) {
 	rcu_read_unlock_sched();
 }
 
+struct semaphore my_semaphore;
+
+static void semaphore_func(void) {
+	sema_init(&my_semaphore, 2);
+	down(&my_semaphore);
+	printk("semaphore_lock_func- init lock unlock\n");
+	up(&my_semaphore);
+}
+
 static int hello_init(void)
 {
 	printk(KERN_ERR"Module, hello lock.\n");
@@ -67,6 +77,7 @@ static int hello_init(void)
 	mutex_lock_func();
 	rwlock_lock_func();
 	rcu_lock_func();
+	semaphore_func();
 	return 0x0;
 }
 
