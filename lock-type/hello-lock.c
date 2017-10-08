@@ -69,7 +69,10 @@ struct semaphore my_sem;
 static void semaphore_func(void) {
 	sema_init(&my_sem, 2);
 	down(&my_sem);
-	printk("semaphore_lock_func- init lock unlock\n");
+	printk("semaphore_lock_func- init down up\n");
+	up(&my_sem);
+	down_interruptible(&my_sem);
+	printk("semaphore_lock_func- down_interruptible up\n");
 	up(&my_sem);
 }
 
