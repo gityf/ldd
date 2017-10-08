@@ -3,6 +3,7 @@
 #include <linux/slab.h>    /* kmalloc kfree*/
 #include <linux/vmalloc.h> /* vmalloc vfree*/
 #include <asm/io.h>        /* ioremap */
+#include <linux/mempool.h>
 
 MODULE_AUTHOR("voipman");
 MODULE_LICENSE("Dual BSD/GPL");
@@ -86,6 +87,25 @@ static int kmem_cache_func(void)
 	return 0;
 }
 
+static int mempool_func(void)
+{
+	char *buf;
+	mempool_t *my_mempool;
+	struct kmem_cache *my_cache;
+
+	my_cache = kmem_cache_create("my_cache", KMEM_CACHE_QUANTUM, 0, SLAB_HWCACHE_ALIGN, NULL);
+	my_mempool = mempool_create(10, mempool_alloc_slab, mempool_free_slab, my_cache);
+	buf = mempool_alloc(my_mempool, GFP_KERNEL);
+	memset(buf, 'F', KMEM_CACHE_QUANTUM);
+	buf[KMEM_CACHE_QUANTUM] = 0x00;
+	printk("mempool_alloc buf ptr:%lu, data:%s\n", (unsigned long)buf, buf);
+	mempool_free(buf, my_mempool);
+	mempool_destroy(my_mempool);
+	kmem_cache_destroy(my_cache);	
+	
+	return 0;
+}
+
 static int hello_init(void)
 {
 	printk(KERN_ERR"Module, hello memory.\n");
@@ -94,6 +114,7 @@ static int hello_init(void)
 	ioremap_iounmap();
 	get_free_page_demo();
 	kmem_cache_func();
+	mempool_func();
 	return 0x0;
 }
 
