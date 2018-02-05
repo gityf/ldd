@@ -28,6 +28,7 @@ vermagic:       3.10.0-123.el7.x86_64 SMP mod_unload modversions
 ## make device node
 	mknod /dev/hello-blk0 b 220 0
 ## make block device to fs as ext3 format.
+```bash
 [root@localhost block-driver]# mkfs.ext3 /dev/hello-blk0
 mke2fs 1.42.9 (28-Dec-2013)
 Filesystem label=
